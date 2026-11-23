@@ -1,1 +1,3 @@
-// React Context providers (AuthContext, ToastContext, etc.) will be added in Phase 2+
+export { AuthContext, ToastContext } from './contexts';
+export { AuthProvider } from './AuthContext';
+export { ToastProvider } from './ToastContext';

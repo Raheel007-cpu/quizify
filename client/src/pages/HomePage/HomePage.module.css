@@ -37,6 +37,41 @@
   max-width: 640px;
 }
 
+.heroActions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.primaryCta {
+  padding: 0.68rem 1.25rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.primaryCta:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.secondaryCta {
+  padding: 0.68rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.secondaryCta:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
 .statusCard {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);

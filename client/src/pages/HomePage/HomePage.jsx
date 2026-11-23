@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { useAuth } from '../../hooks/useAuth';
 import { getHealthStatus } from '../../services/healthService';
 import styles from './HomePage.module.css';
 
 function HomePage() {
+  const { isAuthenticated, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [health, setHealth] = useState(null);
   const [error, setError] = useState(null);
@@ -36,14 +39,37 @@ function HomePage() {
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <span className={styles.eyebrow}>Phase 1 &mdash; Foundation Setup</span>
+        <span className={styles.eyebrow}>Quizify Platform</span>
         <h1 className={styles.title}>
           Interactive Quizzes, Instant Feedback, Measurable Mastery.
         </h1>
         <p className={styles.subtitle}>
-          Welcome to Quizify. The full-stack foundation is wired with React,
-          Vite, Express, Prisma ORM, and PostgreSQL.
+          Register, sign in, and master topics through timed MCQ challenges,
+          instant answer reviews, and analytics.
         </p>
+        <div className={styles.heroActions}>
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard" className={styles.primaryCta}>
+                Go to Dashboard
+              </Link>
+              {isAdmin && (
+                <Link to="/admin" className={styles.secondaryCta}>
+                  Admin Console
+                </Link>
+              )}
+            </>
+          ) : (
+            <>
+              <Link to="/register" className={styles.primaryCta}>
+                Get Started
+              </Link>
+              <Link to="/login" className={styles.secondaryCta}>
+                Sign In
+              </Link>
+            </>
+          )}
+        </div>
       </section>
 
       <section className={styles.statusCard} aria-live="polite">

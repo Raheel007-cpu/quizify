@@ -9,10 +9,12 @@
 .container {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0.9rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .brand {
@@ -43,12 +45,13 @@
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
 .navLink {
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   font-weight: 500;
   color: var(--color-text-muted);
   transition: color 0.15s ease;
@@ -58,11 +61,71 @@
   color: var(--color-primary);
 }
 
-.phaseBadge {
-  font-size: 0.78rem;
+.activeLink {
+  color: var(--color-primary);
   font-weight: 600;
-  padding: 0.25rem 0.65rem;
+}
+
+.authLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.registerBtn {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transition: background-color 0.15s ease;
+}
+
+.registerBtn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.userPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
   background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.roleTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.logoutBtn {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.42rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background-color: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
 }
