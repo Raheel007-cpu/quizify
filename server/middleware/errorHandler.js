@@ -27,6 +27,7 @@ const errorHandler = (err, _req, res, _next) => {
     statusCode = 503;
     message = 'Database connection unavailable';
   } else if (!(err instanceof ApiError) && statusCode === 500) {
+    console.error('Unhandled server error:', err);
     if (process.env.NODE_ENV === 'production') {
       message = 'Internal Server Error';
     }
