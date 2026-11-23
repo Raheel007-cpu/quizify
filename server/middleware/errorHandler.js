@@ -13,6 +13,9 @@ const errorHandler = (err, _req, res, _next) => {
     if (err.code === 'P2002') {
       statusCode = 409;
       message = 'A record with this unique value already exists';
+    } else if (err.code === 'P2003') {
+      statusCode = 409;
+      message = 'Cannot complete operation because this record is referenced by other data';
     } else if (err.code === 'P2025') {
       statusCode = 404;
       message = 'Requested record was not found';

@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .content {
+    width: 100%;
+  }
+}

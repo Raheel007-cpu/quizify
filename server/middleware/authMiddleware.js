@@ -52,6 +52,26 @@ const authenticate = asyncHandler(async (req, _res, next) => {
   next();
 });
 
+const optionalAuthenticate = async (req, _res, next) => {
+  try {
+    const token = extractToken(req);
+    if (!token) {
+      return next();
+    }
+    const decoded = verifyToken(token);
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.sub },
+      select: SAFE_USER_SELECT,
+    });
+    if (user) {
+      req.user = user;
+    }
+  } catch {
+    // Ignore invalid/expired token for optional auth routes
+  }
+  return next();
+};
+
 const authorize = (...allowedRoles) => (req, _res, next) => {
   if (!req.user) {
     return next(new ApiError(401, 'Authentication required.'));
@@ -69,5 +89,6 @@ const authorize = (...allowedRoles) => (req, _res, next) => {
 module.exports = {
   SAFE_USER_SELECT,
   authenticate,
+  optionalAuthenticate,
   authorize,
 };

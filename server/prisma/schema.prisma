@@ -12,15 +12,163 @@ enum Role {
   ADMIN
 }
 
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuizStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AnswerOption {
+  A
+  B
+  C
+  D
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+}
+
 model User {
-  id           Int      @id @default(autoincrement())
-  name         String   @db.VarChar(100)
-  email        String   @unique @db.VarChar(255)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  role         Role     @default(STUDENT)
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(100)
+  email        String        @unique @db.VarChar(255)
+  passwordHash String        @map("password_hash") @db.VarChar(255)
+  role         Role          @default(STUDENT)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  attempts     QuizAttempt[]
 
   @@index([role])
   @@map("users")
+}
+
+model Subject {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(100)
+  description String?    @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  categories  Category[]
+
+  @@map("subjects")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  subjectId   Int        @map("subject_id")
+  name        String     @db.VarChar(100)
+  description String?    @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  subject     Subject    @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  quizzes     Quiz[]
+  questions   Question[]
+
+  @@unique([subjectId, name])
+  @@index([subjectId])
+  @@map("categories")
+}
+
+model Quiz {
+  id            Int            @id @default(autoincrement())
+  categoryId    Int            @map("category_id")
+  title         String         @db.VarChar(160)
+  description   String?        @db.Text
+  difficulty    Difficulty     @default(MEDIUM)
+  timeLimit     Int            @map("time_limit")
+  passingScore  Int            @map("passing_score")
+  questionCount Int            @map("question_count")
+  status        QuizStatus     @default(DRAFT)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  quizQuestions QuizQuestion[]
+  attempts      QuizAttempt[]
+
+  @@index([categoryId])
+  @@index([difficulty])
+  @@index([status])
+  @@map("quizzes")
+}
+
+model Question {
+  id             Int             @id @default(autoincrement())
+  categoryId     Int             @map("category_id")
+  questionText   String          @map("question_text") @db.Text
+  optionA        String          @map("option_a") @db.VarChar(500)
+  optionB        String          @map("option_b") @db.VarChar(500)
+  optionC        String          @map("option_c") @db.VarChar(500)
+  optionD        String          @map("option_d") @db.VarChar(500)
+  correctAnswer  AnswerOption    @map("correct_answer")
+  explanation    String?         @db.Text
+  difficulty     Difficulty      @default(MEDIUM)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  category       Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  quizQuestions  QuizQuestion[]
+  attemptAnswers AttemptAnswer[]
+
+  @@index([categoryId])
+  @@index([difficulty])
+  @@map("questions")
+}
+
+model QuizQuestion {
+  id         Int      @id @default(autoincrement())
+  quizId     Int      @map("quiz_id")
+  questionId Int      @map("question_id")
+  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, questionId])
+  @@index([quizId])
+  @@index([questionId])
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id               Int             @id @default(autoincrement())
+  userId           Int             @map("user_id")
+  quizId           Int             @map("quiz_id")
+  score            Int             @default(0)
+  percentage       Float           @default(0)
+  correctAnswers   Int             @default(0) @map("correct_answers")
+  incorrectAnswers Int             @default(0) @map("incorrect_answers")
+  unanswered       Int             @default(0)
+  timeTaken        Int             @default(0) @map("time_taken")
+  status           AttemptStatus   @default(IN_PROGRESS)
+  startedAt        DateTime        @default(now()) @map("started_at")
+  completedAt      DateTime?       @map("completed_at")
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz             Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers          AttemptAnswer[]
+
+  @@index([userId])
+  @@index([quizId])
+  @@index([status])
+  @@map("quiz_attempts")
+}
+
+model AttemptAnswer {
+  id             Int           @id @default(autoincrement())
+  attemptId      Int           @map("attempt_id")
+  questionId     Int           @map("question_id")
+  questionOrder  Int           @default(0) @map("question_order")
+  selectedAnswer AnswerOption? @map("selected_answer")
+  isCorrect      Boolean?      @map("is_correct")
+  attempt        QuizAttempt   @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question       Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([questionId])
+  @@map("attempt_answers")
 }

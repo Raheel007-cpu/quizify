@@ -78,10 +78,45 @@ const updateProfile = async (
   });
 };
 
-const listUsers = async () => {
+const listUsers = async ({ search } = {}) => {
+  const where = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+        ],
+      }
+    : {};
+
   return prisma.user.findMany({
+    where,
     select: SAFE_USER_SELECT,
     orderBy: { createdAt: 'desc' },
+  });
+};
+
+const updateUserRole = async (targetUserId, role, actorUserId) => {
+  if (!['STUDENT', 'ADMIN'].includes(role)) {
+    throw new ApiError(400, 'Role must be STUDENT or ADMIN');
+  }
+
+  if (targetUserId === actorUserId && role !== 'ADMIN') {
+    throw new ApiError(400, 'You cannot remove your own admin role');
+  }
+
+  const existing = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { id: true },
+  });
+
+  if (!existing) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  return prisma.user.update({
+    where: { id: targetUserId },
+    data: { role },
+    select: SAFE_USER_SELECT,
   });
 };
 
@@ -89,4 +124,5 @@ module.exports = {
   getProfile,
   updateProfile,
   listUsers,
+  updateUserRole,
 };

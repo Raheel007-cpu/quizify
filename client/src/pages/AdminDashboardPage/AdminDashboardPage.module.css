@@ -1,57 +1,106 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .banner {
   background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 1.85rem;
+  padding: 1.6rem;
 }
 
 .badge {
   display: inline-block;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-primary);
-  margin-bottom: 0.45rem;
-}
-
-.title {
-  font-size: 1.65rem;
-  font-weight: 700;
-  color: var(--color-text);
   margin-bottom: 0.35rem;
 }
 
+.title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
 .subtitle {
-  font-size: 0.94rem;
+  font-size: 0.92rem;
   color: var(--color-text-muted);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.statCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.statLabel {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.statSub {
+  font-size: 0.82rem;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.statLink {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.statLink:hover {
+  text-decoration: underline;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
 .card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: 1.4rem;
   box-shadow: var(--shadow-sm);
 }
 
 .cardHeader {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.15rem;
+  margin-bottom: 1rem;
 }
 
 .cardTitle {
-  font-size: 1.15rem;
+  font-size: 1.08rem;
   font-weight: 700;
   color: var(--color-text);
 }
@@ -61,17 +110,79 @@
   color: var(--color-text-muted);
 }
 
-.countPill {
-  font-size: 0.82rem;
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.miniBox {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.subHeading {
+  font-size: 0.86rem;
   font-weight: 600;
-  padding: 0.25rem 0.7rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.diffPill {
+  font-size: 0.82rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 999px;
   background-color: var(--color-primary-light);
   color: var(--color-primary);
 }
 
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.listItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.itemTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.itemMeta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
 .loadingState {
-  padding: 1.5rem 0;
+  padding: 2rem 0;
 }
 
 .errorBox {
@@ -82,40 +193,16 @@
   font-size: 0.9rem;
 }
 
-.tableWrap {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-}
-
-.table th,
-.table td {
-  text-align: left;
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.table th {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-}
-
 .roleTag {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
 }
 
-.roleAdmin {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+.statusPub {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
 }
 
 .roleStudent {
