@@ -29,6 +29,12 @@ function Navbar() {
           <NavLink to="/" end className={getLinkClass}>
             Home
           </NavLink>
+          <NavLink to="/subjects" className={getLinkClass}>
+            Subjects
+          </NavLink>
+          <NavLink to="/quizzes" className={getLinkClass}>
+            Quizzes
+          </NavLink>
 
           {isAuthenticated ? (
             <>

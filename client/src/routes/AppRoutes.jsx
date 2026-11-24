@@ -15,6 +15,13 @@ import RegisterPage from '../pages/Auth/RegisterPage';
 import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import HomePage from '../pages/HomePage/HomePage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
+import QuizAttemptPage from '../pages/QuizAttempt/QuizAttemptPage';
+import StartQuizPage from '../pages/QuizAttempt/StartQuizPage';
+import QuizDetailPage from '../pages/Quizzes/QuizDetailPage';
+import QuizzesPage from '../pages/Quizzes/QuizzesPage';
+import QuizSubmittedPage from '../pages/Results/QuizSubmittedPage';
+import SubjectDetailPage from '../pages/Subjects/SubjectDetailPage';
+import SubjectsPage from '../pages/Subjects/SubjectsPage';
 
 function AppRoutes() {
   return (
@@ -24,11 +31,18 @@ function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/subjects" element={<SubjectsPage />} />
+        <Route path="/subjects/:id" element={<SubjectDetailPage />} />
+        <Route path="/quizzes" element={<QuizzesPage />} />
+        <Route path="/quizzes/:id" element={<QuizDetailPage />} />
 
         {/* Protected Student/Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/quiz/:id/start" element={<StartQuizPage />} />
+          <Route path="/quiz/:attemptId" element={<QuizAttemptPage />} />
+          <Route path="/results/:attemptId" element={<QuizSubmittedPage />} />
         </Route>
 
         {/* Admin-Only Routes */}

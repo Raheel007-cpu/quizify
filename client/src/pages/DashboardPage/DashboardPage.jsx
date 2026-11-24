@@ -19,12 +19,18 @@ function DashboardPage() {
         </div>
 
         <div className={styles.actions}>
-          <Link to="/profile" className={styles.primaryBtn}>
+          <Link to="/quizzes" className={styles.primaryBtn}>
+            Browse Quizzes
+          </Link>
+          <Link to="/subjects" className={styles.secondaryBtn}>
+            Explore Subjects
+          </Link>
+          <Link to="/profile" className={styles.secondaryBtn}>
             Manage Profile
           </Link>
           {isAdmin && (
             <Link to="/admin" className={styles.secondaryBtn}>
-              Open Admin Dashboard
+              Admin Dashboard
             </Link>
           )}
         </div>
@@ -40,19 +46,20 @@ function DashboardPage() {
         </div>
 
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Subjects &amp; Quizzes</h2>
-          <p className={styles.cardValue}>Phase 3 &amp; 4</p>
+          <h2 className={styles.cardTitle}>Interactive Quizzes</h2>
+          <p className={styles.cardValue}>Ready</p>
           <p className={styles.cardNote}>
-            Subject catalog, question bank, randomized quizzes, and countdown
-            timers arrive next.
+            Browse subjects, take randomized timed MCQ quizzes, and submit for
+            backend evaluation.
           </p>
         </div>
 
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Analytics &amp; Leaderboard</h2>
+          <h2 className={styles.cardTitle}>Review &amp; Analytics</h2>
           <p className={styles.cardValue}>Phase 5 &amp; 6</p>
           <p className={styles.cardNote}>
-            Instant answer review, attempt history, charts, and scoreboards.
+            Full question-by-question answer review, attempt history, charts,
+            and leaderboard arrive next.
           </p>
         </div>
       </section>

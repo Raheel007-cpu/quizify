@@ -39,6 +39,22 @@ const getSubjectById = async (id) => {
       categories: {
         orderBy: { name: 'asc' },
         include: {
+          quizzes: {
+            where: { status: 'PUBLISHED' },
+            orderBy: { createdAt: 'desc' },
+            include: {
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  subject: { select: { id: true, name: true } },
+                },
+              },
+              _count: {
+                select: { quizQuestions: true, attempts: true },
+              },
+            },
+          },
           _count: {
             select: { quizzes: true, questions: true },
           },
