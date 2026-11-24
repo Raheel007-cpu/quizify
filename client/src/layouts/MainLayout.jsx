@@ -5,9 +5,14 @@ import styles from './MainLayout.module.css';
 function MainLayout({ children }) {
   return (
     <div className={styles.layout}>
+      <a href="#main-content" className="skipLink">
+        Skip to main content
+      </a>
       <Navbar />
       <div className={styles.contentColumn}>
-        <main className={styles.main}>{children}</main>
+        <main id="main-content" tabIndex={-1} className={styles.main}>
+          <div className="pageEnter">{children}</div>
+        </main>
         <Footer />
       </div>
     </div>

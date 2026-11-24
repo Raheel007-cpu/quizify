@@ -127,21 +127,59 @@ function QuizAttemptPage() {
     submitAttempt(true);
   }, [submitAttempt]);
 
-  const handleSelectAnswer = async (optionKey) => {
-    const activeQuestion = questions[currentIndex];
-    if (!activeQuestion || submitting) return;
+  const handleSelectAnswer = useCallback(
+    async (optionKey) => {
+      const activeQuestion = questions[currentIndex];
+      if (!activeQuestion || submitting) return;
 
-    setAnswers((prev) => ({
-      ...prev,
-      [activeQuestion.id]: optionKey,
-    }));
+      setAnswers((prev) => ({
+        ...prev,
+        [activeQuestion.id]: optionKey,
+      }));
 
-    try {
-      await saveAttemptAnswer(attemptId, activeQuestion.id, optionKey);
-    } catch {
-      // Final submission still sends the complete local answers map
+      try {
+        await saveAttemptAnswer(attemptId, activeQuestion.id, optionKey);
+      } catch {
+        // Final submission still sends the complete local answers map
+      }
+    },
+    [attemptId, currentIndex, questions, submitting]
+  );
+
+  useEffect(() => {
+    if (loading || confirmOpen || submitting || questions.length === 0) {
+      return undefined;
     }
-  };
+
+    const handleKeyDown = (event) => {
+      const tag = event.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      if (event.key === 'ArrowLeft') {
+        setCurrentIndex((i) => Math.max(0, i - 1));
+      } else if (event.key === 'ArrowRight') {
+        setCurrentIndex((i) => Math.min(questions.length - 1, i + 1));
+      } else {
+        const keyMap = {
+          1: 'A',
+          2: 'B',
+          3: 'C',
+          4: 'D',
+          a: 'A',
+          b: 'B',
+          c: 'C',
+          d: 'D',
+        };
+        const chosen = keyMap[event.key.toLowerCase()];
+        if (chosen) {
+          handleSelectAnswer(chosen);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [confirmOpen, handleSelectAnswer, loading, questions.length, submitting]);
 
   const answeredCount = useMemo(
     () => questions.filter((q) => Boolean(answers[q.id])).length,
@@ -283,6 +321,15 @@ function QuizAttemptPage() {
               <i className={`${styles.swatch} ${styles.swatchAnswered}`} /> Answered
             </span>
           </div>
+          <p
+            style={{
+              marginTop: '0.65rem',
+              fontSize: '0.74rem',
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Shortcuts: keys A–D (or 1–4) select an option; &larr;/&rarr; navigate.
+          </p>
         </aside>
       </div>
 

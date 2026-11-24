@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import EmptyState from '../../components/EmptyState/EmptyState';
+import ErrorState from '../../components/ErrorState/ErrorState';
 import FilterDropdown from '../../components/FilterDropdown/FilterDropdown';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import Pagination from '../../components/Pagination/Pagination';
@@ -38,6 +40,7 @@ function ReportsPage() {
   const [resultFilter, setResultFilter] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
     const loadSubjects = async () => {
@@ -53,6 +56,7 @@ function ReportsPage() {
 
   const loadReports = useCallback(async () => {
     setLoading(true);
+    setFetchError('');
     try {
       const res = await getUserAttempts({
         page,
@@ -67,7 +71,9 @@ function ReportsPage() {
         res.data.pagination || { page: 1, totalPages: 1, total: 0 }
       );
     } catch (err) {
-      showToast(err.message || 'Failed to load reports.', 'error');
+      const msg = err.message || 'Failed to load reports.';
+      setFetchError(msg);
+      showToast(msg, 'error');
     } finally {
       setLoading(false);
     }
@@ -158,17 +164,27 @@ function ReportsPage() {
           <div className={styles.loadingState}>
             <LoadingSpinner label="Loading your test reports..." />
           </div>
+        ) : fetchError ? (
+          <ErrorState
+            title="Could not load reports"
+            message={fetchError}
+            onRetry={loadReports}
+          />
         ) : attempts.length === 0 ? (
-          <div className={styles.emptyState}>
-            <p style={{ marginBottom: '1rem' }}>
-              {summary?.totalAttempts === 0
-                ? 'You have not completed any quizzes yet.'
-                : 'No quiz attempts match your current filters.'}
-            </p>
-            <Link to="/quizzes" className={styles.primaryBtn}>
-              Browse Available Quizzes
-            </Link>
-          </div>
+          <EmptyState
+            title={
+              summary?.totalAttempts === 0
+                ? 'No quiz attempts yet'
+                : 'No matching reports'
+            }
+            description={
+              summary?.totalAttempts === 0
+                ? 'Complete your first quiz to see detailed score breakdowns and explanations.'
+                : 'No quiz attempts match your current filters.'
+            }
+            actionLabel="Browse Available Quizzes"
+            actionTo="/quizzes"
+          />
         ) : (
           <>
             <div className={styles.tableWrap}>

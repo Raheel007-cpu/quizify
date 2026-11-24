@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import EmptyState from '../../components/EmptyState/EmptyState';
+import ErrorState from '../../components/ErrorState/ErrorState';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useToast } from '../../hooks/useToast';
@@ -11,14 +13,18 @@ function SubjectsPage() {
   const [subjects, setSubjects] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
   const loadSubjects = useCallback(async () => {
     setLoading(true);
+    setFetchError('');
     try {
       const res = await getSubjects(search ? { search } : {});
       setSubjects(res.data.subjects || []);
     } catch (err) {
-      showToast(err.message || 'Failed to load subjects.', 'error');
+      const msg = err.message || 'Failed to load subjects.';
+      setFetchError(msg);
+      showToast(msg, 'error');
     } finally {
       setLoading(false);
     }
@@ -51,8 +57,19 @@ function SubjectsPage() {
         <div className={styles.loadingState}>
           <LoadingSpinner label="Loading subjects..." />
         </div>
+      ) : fetchError ? (
+        <ErrorState
+          title="Could not load subjects"
+          message={fetchError}
+          onRetry={loadSubjects}
+        />
       ) : subjects.length === 0 ? (
-        <div className={styles.emptyState}>No subjects match your search.</div>
+        <EmptyState
+          title="No subjects found"
+          description="Try clearing your search term to see all available subjects."
+          actionLabel={search ? 'Clear Search' : undefined}
+          onAction={search ? () => setSearch('') : undefined}
+        />
       ) : (
         <div className={styles.grid}>
           {subjects.map((subject) => (

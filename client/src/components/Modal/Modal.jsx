@@ -1,9 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import styles from './Modal.module.css';
 
 function Modal({ isOpen, title, onClose, children, size = 'md' }) {
+  const titleId = useId();
+  const dialogRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
   useEffect(() => {
     if (!isOpen) return undefined;
+
+    previousFocusRef.current = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -12,7 +20,13 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    dialogRef.current?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus?.();
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) {
@@ -29,11 +43,15 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
       }}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
     >
-      <div className={`${styles.dialog} ${styles[size] || styles.md}`}>
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        className={`${styles.dialog} ${styles[size] || styles.md}`}
+      >
         <div className={styles.header}>
-          <h2 id="modal-title" className={styles.title}>
+          <h2 id={titleId} className={styles.title}>
             {title}
           </h2>
           <button

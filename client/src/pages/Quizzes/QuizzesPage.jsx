@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import EmptyState from '../../components/EmptyState/EmptyState';
+import ErrorState from '../../components/ErrorState/ErrorState';
 import FilterDropdown from '../../components/FilterDropdown/FilterDropdown';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import Pagination from '../../components/Pagination/Pagination';
@@ -52,6 +54,7 @@ function QuizzesPage() {
     searchParams.get('maxDuration') || ''
   );
   const [page, setPage] = useState(1);
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
     const loadTaxonomy = async () => {
@@ -76,6 +79,7 @@ function QuizzesPage() {
 
   const loadQuizzes = useCallback(async () => {
     setLoading(true);
+    setFetchError('');
     try {
       const res = await getQuizzes({
         page,
@@ -92,7 +96,9 @@ function QuizzesPage() {
         res.data.pagination || { page: 1, totalPages: 1, total: 0 }
       );
     } catch (err) {
-      showToast(err.message || 'Failed to load quizzes.', 'error');
+      const msg = err.message || 'Failed to load quizzes.';
+      setFetchError(msg);
+      showToast(msg, 'error');
     } finally {
       setLoading(false);
     }
@@ -204,10 +210,19 @@ function QuizzesPage() {
         <div className={styles.loadingState}>
           <LoadingSpinner label="Loading quizzes..." />
         </div>
+      ) : fetchError ? (
+        <ErrorState
+          title="Could not load quizzes"
+          message={fetchError}
+          onRetry={loadQuizzes}
+        />
       ) : quizzes.length === 0 ? (
-        <div className={styles.emptyState}>
-          No published quizzes match your current filters.
-        </div>
+        <EmptyState
+          title="No matching quizzes"
+          description="No published quizzes match your current filters."
+          actionLabel="Reset Filters"
+          onAction={handleResetFilters}
+        />
       ) : (
         <>
           <div className={styles.grid}>

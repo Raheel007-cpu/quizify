@@ -53,6 +53,9 @@ function HomePage() {
               <Link to="/dashboard" className={styles.primaryCta}>
                 Go to Dashboard
               </Link>
+              <Link to="/quizzes" className={styles.secondaryCta}>
+                Browse Quizzes
+              </Link>
               {isAdmin && (
                 <Link to="/admin" className={styles.secondaryCta}>
                   Admin Console
@@ -67,8 +70,38 @@ function HomePage() {
               <Link to="/login" className={styles.secondaryCta}>
                 Sign In
               </Link>
+              <Link to="/quizzes" className={styles.secondaryCta}>
+                Explore Quizzes
+              </Link>
             </>
           )}
+        </div>
+      </section>
+
+      <section className={styles.featuresGrid} aria-label="Platform highlights">
+        <div className={styles.featureCard}>
+          <span className={styles.featureIcon}>01</span>
+          <h2 className={styles.featureTitle}>Randomized Timed Quizzes</h2>
+          <p className={styles.featureDesc}>
+            Every attempt draws a fresh question set from the bank with a
+            server-verified countdown timer.
+          </p>
+        </div>
+        <div className={styles.featureCard}>
+          <span className={styles.featureIcon}>02</span>
+          <h2 className={styles.featureTitle}>Instant Answer Review</h2>
+          <p className={styles.featureDesc}>
+            Receive immediate scores, pass/fail status, and detailed
+            explanations inside your Reports.
+          </p>
+        </div>
+        <div className={styles.featureCard}>
+          <span className={styles.featureIcon}>03</span>
+          <h2 className={styles.featureTitle}>Analytics &amp; Leaderboard</h2>
+          <p className={styles.featureDesc}>
+            Visualize score trends across subjects and difficulties and compete
+            on the Quizify leaderboard.
+          </p>
         </div>
       </section>
 

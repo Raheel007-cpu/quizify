@@ -32,4 +32,15 @@
   background-color: var(--color-danger-bg);
   color: var(--color-danger);
   border-color: #fecaca;
+  animation: pulseCritical 1s ease-in-out infinite;
+}
+
+@keyframes pulseCritical {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25);
+  }
 }
