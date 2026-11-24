@@ -14,6 +14,7 @@ import LoginPage from '../pages/Auth/LoginPage';
 import RegisterPage from '../pages/Auth/RegisterPage';
 import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import HomePage from '../pages/HomePage/HomePage';
+import LeaderboardPage from '../pages/Leaderboard/LeaderboardPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import QuizAttemptPage from '../pages/QuizAttempt/QuizAttemptPage';
 import StartQuizPage from '../pages/QuizAttempt/StartQuizPage';
@@ -42,6 +43,7 @@ function AppRoutes() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/history" element={<ReportsPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/quiz/:id/start" element={<StartQuizPage />} />
           <Route path="/quiz/:attemptId" element={<QuizAttemptPage />} />

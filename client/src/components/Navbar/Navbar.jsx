@@ -44,8 +44,8 @@ function Navbar() {
               <NavLink to="/reports" className={getLinkClass}>
                 Reports
               </NavLink>
-              <NavLink to="/profile" className={getLinkClass}>
-                Profile
+              <NavLink to="/leaderboard" className={getLinkClass}>
+                Leaderboard
               </NavLink>
               {isAdmin && (
                 <NavLink to="/admin" className={getLinkClass}>
@@ -54,10 +54,32 @@ function Navbar() {
               )}
 
               <div className={styles.userActions}>
-                <span className={styles.userPill}>
-                  {user.name}
-                  <span className={styles.roleTag}>{user.role}</span>
-                </span>
+                <div className={styles.userMenu}>
+                  <Link
+                    to="/profile"
+                    className={styles.userPill}
+                    aria-label={`${user.name} (${user.role}) — Account Settings`}
+                  >
+                    <span>{user.name}</span>
+                    <span className={styles.roleTag}>{user.role}</span>
+                  </Link>
+
+                  <div className={styles.userDropdown}>
+                    <div className={styles.dropdownCard}>
+                      <div className={styles.dropdownHeader}>
+                        <div className={styles.dropdownName}>{user.name}</div>
+                        <div className={styles.dropdownEmail}>{user.email}</div>
+                      </div>
+                      <Link to="/profile" className={styles.dropdownLink}>
+                        Account Settings
+                      </Link>
+                      <Link to="/reports" className={styles.dropdownLink}>
+                        My Reports
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   type="button"
                   onClick={handleLogout}

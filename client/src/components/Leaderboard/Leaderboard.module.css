@@ -1,0 +1,92 @@
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.alignRight {
+  text-align: right !important;
+}
+
+.currentUserRow {
+  background-color: var(--color-primary-light);
+}
+
+.userCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.youTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.14rem 0.48rem;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.rankPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.rankGold {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.rankSilver {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.rankBronze {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.rankDefault {
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.pointsCell {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--color-text-muted);
+}

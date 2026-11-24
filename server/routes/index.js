@@ -8,6 +8,7 @@ const questionRoutes = require('./questionRoutes');
 const quizRoutes = require('./quizRoutes');
 const adminRoutes = require('./adminRoutes');
 const attemptRoutes = require('./attemptRoutes');
+const leaderboardRoutes = require('./leaderboardRoutes');
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/', (_req, res) => {
     data: {
       name: 'Quizify REST API',
       version: '1.0.0',
-      phase: 4,
+      phase: 6,
     },
   });
 });
@@ -31,5 +32,6 @@ router.use('/questions', questionRoutes);
 router.use('/quizzes', quizRoutes);
 router.use('/admin', adminRoutes);
 router.use('/attempts', attemptRoutes);
+router.use('/leaderboard', leaderboardRoutes);
 
 module.exports = router;
