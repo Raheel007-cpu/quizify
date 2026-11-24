@@ -8,6 +8,7 @@ const questionRoutes = require('./questionRoutes');
 const quizRoutes = require('./quizRoutes');
 const adminRoutes = require('./adminRoutes');
 const attemptRoutes = require('./attemptRoutes');
+const analyticsRoutes = require('./analyticsRoutes');
 const leaderboardRoutes = require('./leaderboardRoutes');
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.use('/questions', questionRoutes);
 router.use('/quizzes', quizRoutes);
 router.use('/admin', adminRoutes);
 router.use('/attempts', attemptRoutes);
+router.use('/analytics', analyticsRoutes);
 router.use('/leaderboard', leaderboardRoutes);
 
 module.exports = router;

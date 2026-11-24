@@ -3,6 +3,7 @@ import AdminRoute from '../components/AdminRoute/AdminRoute';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import MainLayout from '../layouts/MainLayout';
+import AdminAnalyticsPage from '../pages/Admin/AdminAnalyticsPage';
 import AdminAttemptsPage from '../pages/Admin/AdminAttemptsPage';
 import AdminCategoriesPage from '../pages/Admin/AdminCategoriesPage';
 import AdminQuestionsPage from '../pages/Admin/AdminQuestionsPage';
@@ -10,6 +11,7 @@ import AdminQuizzesPage from '../pages/Admin/AdminQuizzesPage';
 import AdminSubjectsPage from '../pages/Admin/AdminSubjectsPage';
 import AdminUsersPage from '../pages/Admin/AdminUsersPage';
 import AdminDashboardPage from '../pages/AdminDashboardPage/AdminDashboardPage';
+import AnalyticsPage from '../pages/Analytics/AnalyticsPage';
 import LoginPage from '../pages/Auth/LoginPage';
 import RegisterPage from '../pages/Auth/RegisterPage';
 import DashboardPage from '../pages/DashboardPage/DashboardPage';
@@ -43,6 +45,7 @@ function AppRoutes() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/history" element={<ReportsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/quiz/:id/start" element={<StartQuizPage />} />
@@ -60,6 +63,7 @@ function AppRoutes() {
             <Route path="quizzes" element={<AdminQuizzesPage />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="attempts" element={<AdminAttemptsPage />} />
+            <Route path="analytics" element={<AdminAnalyticsPage />} />
           </Route>
         </Route>
 

@@ -10,6 +10,7 @@ const ADMIN_NAV_ITEMS = [
   { to: '/admin/quizzes', label: 'Quizzes' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/attempts', label: 'Attempts' },
+  { to: '/admin/analytics', label: 'Analytics' },
 ];
 
 function AdminLayout() {
