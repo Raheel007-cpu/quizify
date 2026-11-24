@@ -523,52 +523,130 @@ const submitQuizAttempt = async (attemptId, userId, { answers = [] } = {}) => {
   return finalizeAttempt(attemptId, answers, { isExpired });
 };
 
-const listUserAttempts = async (userId, { page = 1, limit = 15 } = {}) => {
+const listUserAttempts = async (
+  userId,
+  { page = 1, limit = 15, search, subjectId, result } = {}
+) => {
   const pageNum = Math.max(1, Number(page) || 1);
   const limitNum = Math.min(100, Math.max(1, Number(limit) || 15));
-  const skip = (pageNum - 1) * limitNum;
 
-  const where = {
+  const baseWhere = {
     userId,
     status: { in: ['COMPLETED', 'EXPIRED'] },
   };
 
-  const [attempts, total] = await Promise.all([
-    prisma.quizAttempt.findMany({
-      where,
-      skip,
-      take: limitNum,
-      orderBy: { completedAt: 'desc' },
-      include: {
-        quiz: {
-          select: {
-            id: true,
-            title: true,
-            difficulty: true,
-            passingScore: true,
-            category: {
-              select: {
-                id: true,
-                name: true,
-                subject: { select: { id: true, name: true } },
-              },
+  const filteredWhere = {
+    ...baseWhere,
+    ...(subjectId || search
+      ? {
+          quiz: {
+            ...(subjectId
+              ? { category: { subjectId: Number(subjectId) } }
+              : {}),
+            ...(search
+              ? { title: { contains: search, mode: 'insensitive' } }
+              : {}),
+          },
+        }
+      : {}),
+  };
+
+  // Compute overall performance summary across all completed attempts
+  const allCompleted = await prisma.quizAttempt.findMany({
+    where: baseWhere,
+    select: {
+      percentage: true,
+      correctAnswers: true,
+      incorrectAnswers: true,
+      unanswered: true,
+      timeTaken: true,
+      quiz: {
+        select: { passingScore: true },
+      },
+    },
+  });
+
+  const totalAttempts = allCompleted.length;
+  let passedCount = 0;
+  let sumPercentage = 0;
+  let bestPercentage = 0;
+  let totalCorrectAnswers = 0;
+  let totalQuestionsAnswered = 0;
+  let totalTimeTaken = 0;
+
+  for (const item of allCompleted) {
+    if (item.percentage >= item.quiz.passingScore) {
+      passedCount += 1;
+    }
+    sumPercentage += item.percentage;
+    if (item.percentage > bestPercentage) {
+      bestPercentage = item.percentage;
+    }
+    totalCorrectAnswers += item.correctAnswers;
+    totalQuestionsAnswered += item.correctAnswers + item.incorrectAnswers;
+    totalTimeTaken += item.timeTaken;
+  }
+
+  const summary = {
+    totalAttempts,
+    passedCount,
+    failedCount: totalAttempts - passedCount,
+    averagePercentage:
+      totalAttempts > 0 ? Number((sumPercentage / totalAttempts).toFixed(1)) : 0,
+    bestPercentage: Number(bestPercentage.toFixed(1)),
+    totalCorrectAnswers,
+    totalQuestionsAnswered,
+    accuracyPercentage:
+      totalQuestionsAnswered > 0
+        ? Number(((totalCorrectAnswers / totalQuestionsAnswered) * 100).toFixed(1))
+        : 0,
+    totalTimeTaken,
+  };
+
+  const matchingAttempts = await prisma.quizAttempt.findMany({
+    where: filteredWhere,
+    orderBy: { completedAt: 'desc' },
+    include: {
+      quiz: {
+        select: {
+          id: true,
+          title: true,
+          difficulty: true,
+          passingScore: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+              subject: { select: { id: true, name: true } },
             },
           },
         },
-        _count: {
-          select: { answers: true },
-        },
       },
-    }),
-    prisma.quizAttempt.count({ where }),
-  ]);
+      _count: {
+        select: { answers: true },
+      },
+    },
+  });
 
-  return {
-    attempts: attempts.map((a) => ({
+  const enriched = matchingAttempts
+    .map((a) => ({
       ...a,
       totalQuestions: a._count.answers,
       passed: a.percentage >= a.quiz.passingScore,
-    })),
+    }))
+    .filter((a) => {
+      if (result === 'PASSED') return a.passed;
+      if (result === 'FAILED') return !a.passed;
+      return true;
+    });
+
+  const total = enriched.length;
+  const start = (pageNum - 1) * limitNum;
+  const paginatedAttempts = enriched.slice(start, start + limitNum);
+
+  return {
+    summary,
+    attempts: paginatedAttempts,
     pagination: {
       total,
       page: pageNum,

@@ -41,6 +41,9 @@ function Navbar() {
               <NavLink to="/dashboard" className={getLinkClass}>
                 Dashboard
               </NavLink>
+              <NavLink to="/reports" className={getLinkClass}>
+                Reports
+              </NavLink>
               <NavLink to="/profile" className={getLinkClass}>
                 Profile
               </NavLink>

@@ -19,6 +19,7 @@ import QuizAttemptPage from '../pages/QuizAttempt/QuizAttemptPage';
 import StartQuizPage from '../pages/QuizAttempt/StartQuizPage';
 import QuizDetailPage from '../pages/Quizzes/QuizDetailPage';
 import QuizzesPage from '../pages/Quizzes/QuizzesPage';
+import ReportsPage from '../pages/Reports/ReportsPage';
 import QuizSubmittedPage from '../pages/Results/QuizSubmittedPage';
 import SubjectDetailPage from '../pages/Subjects/SubjectDetailPage';
 import SubjectsPage from '../pages/Subjects/SubjectsPage';
@@ -39,6 +40,8 @@ function AppRoutes() {
         {/* Protected Student/Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/history" element={<ReportsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/quiz/:id/start" element={<StartQuizPage />} />
           <Route path="/quiz/:attemptId" element={<QuizAttemptPage />} />
