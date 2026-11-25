@@ -7,7 +7,10 @@ function Footer() {
         <p className={styles.text}>
           Quizify &mdash; Interactive Quiz &amp; Learning Platform
         </p>
-        <p className={styles.meta}>React + Vite + Express + Prisma + PostgreSQL</p>
+        <p className={styles.meta}>
+          &copy; {new Date().getFullYear()} Quizify. Learn, practice, and master
+          every topic.
+        </p>
       </div>
     </footer>
   );

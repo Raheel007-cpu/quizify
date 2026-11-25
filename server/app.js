@@ -9,6 +9,9 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+// Trust AWS ALB / CloudFront / Nginx reverse proxy headers (X-Forwarded-*)
+app.set('trust proxy', 1);
+
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
   .map((origin) => origin.trim())

@@ -19,7 +19,7 @@ router.get('/', (_req, res) => {
     data: {
       name: 'Quizify REST API',
       version: '1.0.0',
-      phase: 6,
+      phase: 9,
     },
   });
 });

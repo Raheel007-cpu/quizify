@@ -4,6 +4,7 @@ const app = require('./app');
 const prisma = require('./utils/prisma');
 
 const PORT = Number(process.env.PORT) || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
 let server;
 
 const startServer = async () => {
@@ -15,9 +16,9 @@ const startServer = async () => {
     console.error('Failed to connect to PostgreSQL database:', error.message);
   }
 
-  server = app.listen(PORT, () => {
+  server = app.listen(PORT, HOST, () => {
     console.log(
-      `Quizify server running on http://localhost:${PORT} (${process.env.NODE_ENV || 'development'})`
+      `Quizify server running on http://${HOST}:${PORT} (${process.env.NODE_ENV || 'development'})`
     );
   });
 };

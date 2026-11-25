@@ -45,6 +45,7 @@
 }
 
 .primaryCta {
+  display: inline-block;
   padding: 0.68rem 1.25rem;
   border-radius: var(--radius-sm);
   background-color: var(--color-primary);
@@ -58,6 +59,7 @@
 }
 
 .secondaryCta {
+  display: inline-block;
   padding: 0.68rem 1.25rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
@@ -114,7 +116,7 @@
   color: var(--color-text-muted);
 }
 
-.statusCard {
+.aboutCard {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -122,115 +124,59 @@
   box-shadow: var(--shadow-md);
 }
 
-.statusHeader {
+.aboutHeader {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.35rem;
 }
 
-.statusTitle {
+.aboutTitle {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-text);
 }
 
-.statusDesc {
+.aboutDesc {
   font-size: 0.92rem;
   color: var(--color-text-muted);
 }
 
-.retryButton {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 0.6rem 1.1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: background-color 0.15s ease;
-}
-
-.retryButton:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
-}
-
-.retryButton:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.loadingState {
-  padding: 1.5rem 0;
-}
-
-.grid {
+.stepsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
-.metricCard {
+.stepBox {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  padding: 1.1rem 1.2rem;
   background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.metricLabel {
-  font-size: 0.92rem;
-  font-weight: 600;
+.stepLabel {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+}
+
+.stepTitle {
+  font-size: 0.98rem;
+  font-weight: 700;
   color: var(--color-text);
 }
 
-.badge {
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-}
-
-.badgeOk {
-  background-color: var(--color-success-bg);
-  color: var(--color-success);
-}
-
-.badgeFail {
-  background-color: var(--color-danger-bg);
-  color: var(--color-danger);
-}
-
-.details {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  font-size: 0.88rem;
+.stepText {
+  font-size: 0.86rem;
   color: var(--color-text-muted);
-}
-
-.errorBox {
-  margin-top: 1.25rem;
-  padding: 0.9rem 1.1rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-danger-bg);
-  color: var(--color-danger);
-  font-size: 0.9rem;
-}
-
-.errorSubtext {
-  margin-top: 0.4rem;
-  font-family: monospace;
-  font-size: 0.82rem;
-  word-break: break-word;
 }
 
 @media (max-width: 640px) {
@@ -238,7 +184,7 @@
     padding: 1.5rem;
   }
 
-  .statusCard {
+  .aboutCard {
     padding: 1.25rem;
   }
 }

@@ -1,40 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
-import { getHealthStatus } from '../../services/healthService';
 import styles from './HomePage.module.css';
 
 function HomePage() {
   const { isAuthenticated, isAdmin } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [health, setHealth] = useState(null);
-  const [error, setError] = useState(null);
-
-  const checkConnectivity = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setHealth(null);
-
-    try {
-      const payload = await getHealthStatus();
-      setHealth(payload.data);
-    } catch (err) {
-      setError(err);
-      if (err.data?.data) {
-        setHealth(err.data.data);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkConnectivity();
-  }, [checkConnectivity]);
-
-  const apiConnected = Boolean(health);
-  const dbConnected = Boolean(health?.database?.connected);
 
   return (
     <div className={styles.page}>
@@ -105,92 +74,48 @@ function HomePage() {
         </div>
       </section>
 
-      <section className={styles.statusCard} aria-live="polite">
-        <div className={styles.statusHeader}>
+      <section className={styles.aboutCard} aria-label="About Quizify">
+        <div className={styles.aboutHeader}>
           <div>
-            <h2 className={styles.statusTitle}>System Connectivity Check</h2>
-            <p className={styles.statusDesc}>
-              Verifies live communication: React Frontend &rarr; Express REST
-              API &rarr; PostgreSQL Database
+            <h2 className={styles.aboutTitle}>How Quizify Helps You Learn</h2>
+            <p className={styles.aboutDesc}>
+              Built for focused practice across Programming, Mathematics,
+              Science, History, and Geography.
             </p>
           </div>
-          <button
-            type="button"
-            className={styles.retryButton}
-            onClick={checkConnectivity}
-            disabled={loading}
-          >
-            {loading ? 'Checking...' : 'Re-check Connection'}
-          </button>
+          <Link to="/subjects" className={styles.primaryCta}>
+            Explore Subjects
+          </Link>
         </div>
 
-        {loading ? (
-          <div className={styles.loadingState}>
-            <LoadingSpinner label="Pinging Express API and PostgreSQL via Prisma..." />
+        <div className={styles.stepsGrid}>
+          <div className={styles.stepBox}>
+            <span className={styles.stepLabel}>Step 1 &bull; Choose</span>
+            <strong className={styles.stepTitle}>Pick a Subject &amp; Difficulty</strong>
+            <p className={styles.stepText}>
+              Filter quizzes by subject, topic, difficulty level, or time
+              limit to fit your study session.
+            </p>
           </div>
-        ) : (
-          <div className={styles.grid}>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Frontend (React + Vite)</span>
-              <span className={`${styles.badge} ${styles.badgeOk}`}>
-                Active
-              </span>
-            </div>
 
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Backend (Express API)</span>
-              <span
-                className={`${styles.badge} ${
-                  apiConnected ? styles.badgeOk : styles.badgeFail
-                }`}
-              >
-                {apiConnected ? 'Connected' : 'Unreachable'}
-              </span>
-            </div>
-
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>
-                Database (PostgreSQL + Prisma)
-              </span>
-              <span
-                className={`${styles.badge} ${
-                  dbConnected ? styles.badgeOk : styles.badgeFail
-                }`}
-              >
-                {dbConnected ? 'Connected' : 'Disconnected'}
-              </span>
-            </div>
+          <div className={styles.stepBox}>
+            <span className={styles.stepLabel}>Step 2 &bull; Practice</span>
+            <strong className={styles.stepTitle}>Focus Without Distractions</strong>
+            <p className={styles.stepText}>
+              Navigate smoothly between questions with keyboard shortcuts, live
+              progress tracking, and auto-saved answers.
+            </p>
           </div>
-        )}
 
-        {!loading && health && (
-          <div className={styles.details}>
-            <div>
-              <strong>Environment:</strong> {health.environment}
-            </div>
-            <div>
-              <strong>Service:</strong> {health.service}
-            </div>
-            {health.database?.latencyMs !== null && (
-              <div>
-                <strong>DB Latency:</strong> {health.database.latencyMs} ms
-              </div>
-            )}
-            <div>
-              <strong>Checked At:</strong>{' '}
-              {new Date(health.timestamp).toLocaleTimeString()}
-            </div>
+          <div className={styles.stepBox}>
+            <span className={styles.stepLabel}>Step 3 &bull; Improve</span>
+            <strong className={styles.stepTitle}>Review &amp; Track Growth</strong>
+            <p className={styles.stepText}>
+              Inspect every explanation in Reports, spot weak subjects in
+              Analytics, and rise on the Leaderboard.
+            </p>
           </div>
-        )}
-
-        {!loading && error && (
-          <div className={styles.errorBox} role="alert">
-            <strong>Connection Detail:</strong> {error.message}
-            {health?.database?.error && (
-              <p className={styles.errorSubtext}>{health.database.error}</p>
-            )}
-          </div>
-        )}
+        </div>
       </section>
     </div>
   );

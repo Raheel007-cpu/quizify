@@ -29,13 +29,22 @@ const verifyToken = (token) => {
   return jwt.verify(token, getJwtSecret());
 };
 
-const getCookieOptions = () => ({
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  maxAge: SEVEN_DAYS_MS,
-  path: '/',
-});
+const getCookieOptions = () => {
+  const isProd = process.env.NODE_ENV === 'production';
+  const sameSite = process.env.COOKIE_SAME_SITE || (isProd ? 'lax' : 'lax');
+  const secure =
+    process.env.COOKIE_SECURE !== undefined
+      ? process.env.COOKIE_SECURE === 'true'
+      : isProd || sameSite === 'none';
+
+  return {
+    httpOnly: true,
+    sameSite,
+    secure,
+    maxAge: SEVEN_DAYS_MS,
+    path: '/',
+  };
+};
 
 module.exports = {
   COOKIE_NAME,
