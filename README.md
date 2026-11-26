@@ -2,6 +2,7 @@
 
 Quizify is a full-stack interactive quiz and learning platform with role-based access for **Students** and **Admins**. Students can browse published quizzes, take timed randomized assessments, review detailed answer explanations, and track their performance and leaderboard rankings. Admins can manage subjects, categories, a reusable question bank (supporting 2-option True/False, 3-option, and 4-option MCQs), and publish quizzes.
 
+**Live Demo**: https://quizify-2026.duckdns.org/
 ---
 
 ## Features
