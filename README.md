@@ -1,6 +1,16 @@
 # Quizify
 
-Quizify is a full-stack interactive quiz and learning platform with role-based access for **Students** and **Admins**. Students can browse published quizzes, take timed randomized assessments, review detailed answer explanations, and track their performance and leaderboard rankings. Admins can manage subjects, categories, a reusable question bank (supporting 2-option True/False, 3-option, and 4-option MCQs), and publish quizzes.
+Quizify is a full-stack interactive quiz and learning platform **deployed on Amazon Web Services (AWS EC2 + Amazon RDS)** using Docker Compose, Nginx, and Caddy HTTPS.
+
+It provides role-based workflows for **Students** and **Admins**: students can browse published quizzes, take timed randomized assessments, review detailed answer explanations, and track their performance and leaderboard rankings, while admins manage subjects, categories, a reusable question bank (2-, 3-, and 4-option MCQs + True/False), and quizzes.
+
+---
+
+## AWS EC2 Deployment Highlights
+
+- **Compute**: Hosted on **Amazon EC2 (Ubuntu)** running containerized frontend and backend services via **Docker Compose**.
+- **HTTPS & Reverse Proxy**: **Caddy** handles automatic Let's Encrypt SSL/TLS termination for `quizify-2026.duckdns.org`, forwarding traffic to **Nginx** (which serves the React/Vite bundle and proxies `/api/*` to the Express server).
+- **Database**: Managed **Amazon RDS (PostgreSQL 16)** instance with Prisma ORM migrations.
 
 ---
 
