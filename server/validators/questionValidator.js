@@ -3,7 +3,20 @@ const { z } = require('zod');
 const DIFFICULTIES = ['EASY', 'MEDIUM', 'HARD'];
 const ANSWER_OPTIONS = ['A', 'B', 'C', 'D'];
 
-const createQuestionSchema = z.object({
+const optionalOptionSchema = (label) =>
+  z
+    .union([
+      z.string().trim().max(500, `${label} must be 500 characters or fewer`),
+      z.null(),
+    ])
+    .optional()
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      if (val === null || val === '') return null;
+      return val;
+    });
+
+const questionBaseSchema = z.object({
   categoryId: z.coerce
     .number({ invalid_type_error: 'Category is required' })
     .int()
@@ -23,16 +36,8 @@ const createQuestionSchema = z.object({
     .trim()
     .min(1, 'Option B is required')
     .max(500, 'Option B must be 500 characters or fewer'),
-  optionC: z
-    .string({ required_error: 'Option C is required' })
-    .trim()
-    .min(1, 'Option C is required')
-    .max(500, 'Option C must be 500 characters or fewer'),
-  optionD: z
-    .string({ required_error: 'Option D is required' })
-    .trim()
-    .min(1, 'Option D is required')
-    .max(500, 'Option D must be 500 characters or fewer'),
+  optionC: optionalOptionSchema('Option C'),
+  optionD: optionalOptionSchema('Option D'),
   correctAnswer: z.enum(ANSWER_OPTIONS, {
     errorMap: () => ({ message: 'Correct answer must be A, B, C, or D' }),
   }),
@@ -47,7 +52,26 @@ const createQuestionSchema = z.object({
   }),
 });
 
-const updateQuestionSchema = createQuestionSchema.partial();
+const hasNonEmptyOption = (val) => typeof val === 'string' && val.trim().length > 0;
+
+const createQuestionSchema = questionBaseSchema.superRefine((data, ctx) => {
+  if (data.correctAnswer === 'C' && !hasNonEmptyOption(data.optionC)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['correctAnswer'],
+      message: 'Correct answer cannot be C when Option C is empty',
+    });
+  }
+  if (data.correctAnswer === 'D' && !hasNonEmptyOption(data.optionD)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['correctAnswer'],
+      message: 'Correct answer cannot be D when Option D is empty',
+    });
+  }
+});
+
+const updateQuestionSchema = questionBaseSchema.partial();
 
 module.exports = {
   createQuestionSchema,

@@ -203,4 +203,89 @@ describe('Admin Quiz Creation & Question Bank Management', () => {
     });
     assert.equal(studentVisible.json.data.quizzes.length, 1);
   });
+
+  it('supports 2-option (True/False) and 3-option questions and validates correctAnswer', async () => {
+    const subj = await apiRequest(server.baseUrl, '/subjects', {
+      method: 'POST',
+      cookie: adminCookie,
+      body: { name: 'CS Basics' },
+    });
+    const cat = await apiRequest(server.baseUrl, '/categories', {
+      method: 'POST',
+      cookie: adminCookie,
+      body: { subjectId: subj.json.data.subject.id, name: 'Logic' },
+    });
+    const categoryId = cat.json.data.category.id;
+
+    // 2-option True/False question
+    const tfRes = await apiRequest(server.baseUrl, '/questions', {
+      method: 'POST',
+      cookie: adminCookie,
+      body: {
+        categoryId,
+        questionText: 'HTTP is a stateless protocol.',
+        optionA: 'True',
+        optionB: 'False',
+        optionC: '',
+        optionD: null,
+        correctAnswer: 'A',
+        difficulty: 'EASY',
+      },
+    });
+    assert.equal(tfRes.status, 201);
+    assert.equal(tfRes.json.data.question.optionC, null);
+    assert.equal(tfRes.json.data.question.optionD, null);
+
+    // 3-option question
+    const threeRes = await apiRequest(server.baseUrl, '/questions', {
+      method: 'POST',
+      cookie: adminCookie,
+      body: {
+        categoryId,
+        questionText: 'Which HTTP status indicates Not Found?',
+        optionA: '200',
+        optionB: '401',
+        optionC: '404',
+        correctAnswer: 'C',
+        difficulty: 'MEDIUM',
+      },
+    });
+    assert.equal(threeRes.status, 201);
+    assert.equal(threeRes.json.data.question.optionC, '404');
+    assert.equal(threeRes.json.data.question.optionD, null);
+    const threeId = threeRes.json.data.question.id;
+
+    // Reject creating when correctAnswer points to empty option
+    const badCreate = await apiRequest(server.baseUrl, '/questions', {
+      method: 'POST',
+      cookie: adminCookie,
+      body: {
+        categoryId,
+        questionText: 'Invalid option target test?',
+        optionA: 'Yes',
+        optionB: 'No',
+        correctAnswer: 'C',
+        difficulty: 'EASY',
+      },
+    });
+    assert.equal(badCreate.status, 400);
+
+    // Reject clearing optionC while correctAnswer remains C
+    const badUpdate = await apiRequest(server.baseUrl, `/questions/${threeId}`, {
+      method: 'PUT',
+      cookie: adminCookie,
+      body: { optionC: '' },
+    });
+    assert.equal(badUpdate.status, 400);
+
+    // Succeed when clearing optionC alongside updating correctAnswer
+    const goodUpdate = await apiRequest(server.baseUrl, `/questions/${threeId}`, {
+      method: 'PUT',
+      cookie: adminCookie,
+      body: { optionC: null, correctAnswer: 'A' },
+    });
+    assert.equal(goodUpdate.status, 200);
+    assert.equal(goodUpdate.json.data.question.optionC, null);
+    assert.equal(goodUpdate.json.data.question.correctAnswer, 'A');
+  });
 });

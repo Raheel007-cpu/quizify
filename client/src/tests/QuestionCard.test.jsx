@@ -35,4 +35,29 @@ describe('QuestionCard', () => {
     fireEvent.click(radios[2]);
     expect(onSelect).toHaveBeenCalledWith('C');
   });
+
+  it('renders only populated options for 2-option (True/False) and 3-option questions', () => {
+    const onSelect = vi.fn();
+    render(
+      <QuestionCard
+        question={{
+          id: 11,
+          questionText: 'JavaScript is single-threaded.',
+          optionA: 'True',
+          optionB: 'False',
+          optionC: null,
+          optionD: null,
+        }}
+        questionNumber={1}
+        totalQuestions={2}
+        selectedAnswer="A"
+        onSelectAnswer={onSelect}
+      />
+    );
+
+    const radios = screen.getAllByRole('radio');
+    expect(radios).toHaveLength(2);
+    expect(screen.getByText('True')).toBeInTheDocument();
+    expect(screen.getByText('False')).toBeInTheDocument();
+  });
 });

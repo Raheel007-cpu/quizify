@@ -141,8 +141,8 @@ function AdminQuestionsPage() {
       questionText: question.questionText,
       optionA: question.optionA,
       optionB: question.optionB,
-      optionC: question.optionC,
-      optionD: question.optionD,
+      optionC: question.optionC || '',
+      optionD: question.optionD || '',
       correctAnswer: question.correctAnswer,
       difficulty: question.difficulty,
       explanation: question.explanation || '',
@@ -162,17 +162,48 @@ function AdminQuestionsPage() {
     }));
   };
 
+  const handleOptionChange = (letter, value) => {
+    setForm((prev) => {
+      const next = { ...prev, [`option${letter}`]: value };
+      if (!value.trim() && prev.correctAnswer === letter) {
+        next.correctAnswer = 'A';
+      }
+      return next;
+    });
+  };
+
+  const applyTrueFalsePreset = () => {
+    setForm((prev) => ({
+      ...prev,
+      optionA: 'True',
+      optionB: 'False',
+      optionC: '',
+      optionD: '',
+      correctAnswer: prev.correctAnswer === 'B' ? 'B' : 'A',
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
       !form.categoryId ||
       !form.questionText.trim() ||
       !form.optionA.trim() ||
-      !form.optionB.trim() ||
-      !form.optionC.trim() ||
-      !form.optionD.trim()
+      !form.optionB.trim()
     ) {
-      setFormError('Category, question text, and all four options are required.');
+      setFormError(
+        'Category, question text, Option A, and Option B are required.'
+      );
+      return;
+    }
+
+    if (
+      (form.correctAnswer === 'C' && !form.optionC.trim()) ||
+      (form.correctAnswer === 'D' && !form.optionD.trim())
+    ) {
+      setFormError(
+        `Correct answer cannot be ${form.correctAnswer} when Option ${form.correctAnswer} is empty.`
+      );
       return;
     }
 
@@ -184,8 +215,8 @@ function AdminQuestionsPage() {
         questionText: form.questionText.trim(),
         optionA: form.optionA.trim(),
         optionB: form.optionB.trim(),
-        optionC: form.optionC.trim(),
-        optionD: form.optionD.trim(),
+        optionC: form.optionC.trim() || null,
+        optionD: form.optionD.trim() || null,
         correctAnswer: form.correctAnswer,
         difficulty: form.difficulty,
         explanation: form.explanation.trim(),
@@ -324,9 +355,8 @@ function AdminQuestionsPage() {
                       </td>
                       <td>
                         <span
-                          className={`${styles.badge} ${
-                            DIFFICULTY_BADGE_MAP[q.difficulty] || ''
-                          }`}
+                          className={`${styles.badge} ${DIFFICULTY_BADGE_MAP[q.difficulty] || ''
+                            }`}
                         >
                           {q.difficulty}
                         </span>
@@ -454,23 +484,46 @@ function AdminQuestionsPage() {
             />
           </div>
 
+          <div
+            className={styles.rowActions}
+            style={{ justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <span className={styles.subtitle}>
+              Options A &amp; B are required. Leave C or D blank for 2- or 3-option questions.
+            </span>
+            <button
+              type="button"
+              className={styles.secondaryBtn}
+              onClick={applyTrueFalsePreset}
+            >
+              True / False Preset
+            </button>
+          </div>
+
           <div className={styles.formGrid}>
-            {['A', 'B', 'C', 'D'].map((letter) => (
-              <div key={letter} className={styles.field}>
-                <label htmlFor={`opt-${letter}`} className={styles.label}>
-                  Option {letter}
-                </label>
-                <input
-                  id={`opt-${letter}`}
-                  type="text"
-                  className={styles.input}
-                  value={form[`option${letter}`]}
-                  onChange={(e) =>
-                    setForm({ ...form, [`option${letter}`]: e.target.value })
-                  }
-                />
-              </div>
-            ))}
+            {['A', 'B', 'C', 'D'].map((letter) => {
+              const isOptional = letter === 'C' || letter === 'D';
+              return (
+                <div key={letter} className={styles.field}>
+                  <label htmlFor={`opt-${letter}`} className={styles.label}>
+                    Option {letter}
+                    {isOptional ? ' (Optional)' : ' *'}
+                  </label>
+                  <input
+                    id={`opt-${letter}`}
+                    type="text"
+                    className={styles.input}
+                    value={form[`option${letter}`]}
+                    onChange={(e) => handleOptionChange(letter, e.target.value)}
+                    placeholder={
+                      isOptional
+                        ? 'Optional — leave blank to omit'
+                        : `Enter option ${letter}`
+                    }
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className={styles.formGrid}>
@@ -486,10 +539,18 @@ function AdminQuestionsPage() {
                   setForm({ ...form, correctAnswer: e.target.value })
                 }
               >
-                <option value="A">Option A</option>
-                <option value="B">Option B</option>
-                <option value="C">Option C</option>
-                <option value="D">Option D</option>
+                {['A', 'B', 'C', 'D']
+                  .filter(
+                    (letter) =>
+                      letter === 'A' ||
+                      letter === 'B' ||
+                      Boolean(form[`option${letter}`].trim())
+                  )
+                  .map((letter) => (
+                    <option key={letter} value={letter}>
+                      Option {letter}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
@@ -525,8 +586,8 @@ function AdminQuestionsPage() {
               {saving
                 ? 'Saving...'
                 : editing
-                ? 'Update Question'
-                : 'Save Question'}
+                  ? 'Update Question'
+                  : 'Save Question'}
             </button>
           </div>
         </form>

@@ -80,6 +80,15 @@ const getQuestionById = async (id) => {
   return question;
 };
 
+const assertValidCorrectAnswer = (correctAnswer, { optionC, optionD }) => {
+  if (correctAnswer === 'C' && !optionC) {
+    throw new ApiError(400, 'Correct answer cannot be C when Option C is empty');
+  }
+  if (correctAnswer === 'D' && !optionD) {
+    throw new ApiError(400, 'Correct answer cannot be D when Option D is empty');
+  }
+};
+
 const createQuestion = async (payload) => {
   const category = await prisma.category.findUnique({
     where: { id: payload.categoryId },
@@ -90,14 +99,18 @@ const createQuestion = async (payload) => {
     throw new ApiError(404, 'Selected category not found');
   }
 
+  const optionC = payload.optionC || null;
+  const optionD = payload.optionD || null;
+  assertValidCorrectAnswer(payload.correctAnswer, { optionC, optionD });
+
   return prisma.question.create({
     data: {
       categoryId: payload.categoryId,
       questionText: payload.questionText,
       optionA: payload.optionA,
       optionB: payload.optionB,
-      optionC: payload.optionC,
-      optionD: payload.optionD,
+      optionC,
+      optionD,
       correctAnswer: payload.correctAnswer,
       explanation: payload.explanation || null,
       difficulty: payload.difficulty,
@@ -109,7 +122,12 @@ const createQuestion = async (payload) => {
 const updateQuestion = async (id, payload) => {
   const existing = await prisma.question.findUnique({
     where: { id },
-    select: { id: true },
+    select: {
+      id: true,
+      optionC: true,
+      optionD: true,
+      correctAnswer: true,
+    },
   });
 
   if (!existing) {
@@ -126,6 +144,20 @@ const updateQuestion = async (id, payload) => {
     }
   }
 
+  const nextOptionC =
+    payload.optionC !== undefined ? payload.optionC || null : existing.optionC;
+  const nextOptionD =
+    payload.optionD !== undefined ? payload.optionD || null : existing.optionD;
+  const nextCorrectAnswer =
+    payload.correctAnswer !== undefined
+      ? payload.correctAnswer
+      : existing.correctAnswer;
+
+  assertValidCorrectAnswer(nextCorrectAnswer, {
+    optionC: nextOptionC,
+    optionD: nextOptionD,
+  });
+
   return prisma.question.update({
     where: { id },
     data: {
@@ -133,8 +165,8 @@ const updateQuestion = async (id, payload) => {
       ...(payload.questionText !== undefined ? { questionText: payload.questionText } : {}),
       ...(payload.optionA !== undefined ? { optionA: payload.optionA } : {}),
       ...(payload.optionB !== undefined ? { optionB: payload.optionB } : {}),
-      ...(payload.optionC !== undefined ? { optionC: payload.optionC } : {}),
-      ...(payload.optionD !== undefined ? { optionD: payload.optionD } : {}),
+      ...(payload.optionC !== undefined ? { optionC: nextOptionC } : {}),
+      ...(payload.optionD !== undefined ? { optionD: nextOptionD } : {}),
       ...(payload.correctAnswer !== undefined ? { correctAnswer: payload.correctAnswer } : {}),
       ...(payload.explanation !== undefined
         ? { explanation: payload.explanation || null }

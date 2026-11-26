@@ -105,8 +105,8 @@ model Question {
   questionText   String          @map("question_text") @db.Text
   optionA        String          @map("option_a") @db.VarChar(500)
   optionB        String          @map("option_b") @db.VarChar(500)
-  optionC        String          @map("option_c") @db.VarChar(500)
-  optionD        String          @map("option_d") @db.VarChar(500)
+  optionC        String?         @map("option_c") @db.VarChar(500)
+  optionD        String?         @map("option_d") @db.VarChar(500)
   correctAnswer  AnswerOption    @map("correct_answer")
   explanation    String?         @db.Text
   difficulty     Difficulty      @default(MEDIUM)

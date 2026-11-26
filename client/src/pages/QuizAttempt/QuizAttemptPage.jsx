@@ -130,7 +130,9 @@ function QuizAttemptPage() {
   const handleSelectAnswer = useCallback(
     async (optionKey) => {
       const activeQuestion = questions[currentIndex];
-      if (!activeQuestion || submitting) return;
+      if (!activeQuestion || submitting || !activeQuestion[`option${optionKey}`]) {
+        return;
+      }
 
       setAnswers((prev) => ({
         ...prev,

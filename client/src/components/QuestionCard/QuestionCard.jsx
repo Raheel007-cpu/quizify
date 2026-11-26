@@ -15,6 +15,10 @@ function QuestionCard({
   onSelectAnswer,
   disabled = false,
 }) {
+  const availableOptions = OPTIONS.filter(({ field }) =>
+    Boolean(question?.[field])
+  );
+
   return (
     <section className={styles.card}>
       <div className={styles.counter}>
@@ -24,7 +28,7 @@ function QuestionCard({
       <h2 className={styles.prompt}>{question.questionText}</h2>
 
       <div className={styles.options} role="radiogroup" aria-label="Answer options">
-        {OPTIONS.map(({ key, field }) => {
+        {availableOptions.map(({ key, field }) => {
           const isSelected = selectedAnswer === key;
           return (
             <button

@@ -219,7 +219,9 @@ function QuizSubmittedPage() {
                   <h3 className={styles.qPrompt}>{item.questionText}</h3>
 
                   <div className={styles.optionsList}>
-                    {OPTION_KEYS.map((key) => {
+                    {OPTION_KEYS.filter((key) =>
+                      Boolean(item[`option${key}`])
+                    ).map((key) => {
                       const text = item[`option${key}`];
                       const isCorrectOption = item.correctAnswer === key;
                       const isUserSelected = item.selectedAnswer === key;
