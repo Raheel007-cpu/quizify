@@ -5,6 +5,11 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
   const titleId = useId();
   const dialogRef = useRef(null);
   const previousFocusRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -15,7 +20,7 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        onClose();
+        onCloseRef.current?.();
       }
     };
 
@@ -27,7 +32,7 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
       document.body.style.overflow = previousOverflow;
       previousFocusRef.current?.focus?.();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;
@@ -38,7 +43,7 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
       className={styles.backdrop}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          onClose();
+          onCloseRef.current?.();
         }
       }}
       role="dialog"
@@ -56,7 +61,7 @@ function Modal({ isOpen, title, onClose, children, size = 'md' }) {
           </h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => onCloseRef.current?.()}
             className={styles.closeBtn}
             aria-label="Close dialog"
           >
