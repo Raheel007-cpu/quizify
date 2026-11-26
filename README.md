@@ -12,6 +12,7 @@ It provides role-based workflows for **Students** and **Admins**: students can b
 - **HTTPS & Reverse Proxy**: **Caddy** handles automatic Let's Encrypt SSL/TLS termination for `quizify-2026.duckdns.org`, forwarding traffic to **Nginx** (which serves the React/Vite bundle and proxies `/api/*` to the Express server).
 - **Database**: Managed **Amazon RDS (PostgreSQL 16)** instance with Prisma ORM migrations.
 
+**Live Demo**: https://quizify-2026.duckdns.org/
 ---
 
 ## Features
